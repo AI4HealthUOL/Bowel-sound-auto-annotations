@@ -1,5 +1,6 @@
+from pathlib import Path
+from evaluation_core import main as evaluation_main
 from __future__ import annotations
-
 import os
 from math import ceil
 from typing import Optional, Tuple, Dict, List
@@ -12,7 +13,19 @@ import matplotlib.pyplot as plt
 # ---------------------------------------------------------------------
 # Configuration
 # ---------------------------------------------------------------------
+def run_evaluation(cfg):
+    out_dir = Path(cfg["output"]["results_dir"]) / "evaluation"
+    out_dir.mkdir(parents=True, exist_ok=True)
 
+    evaluation_main(
+        pred_path=str(out_dir.parent / "segments_predicted.csv"),
+        orig_path=cfg["input"]["master_csv"],
+        out_dir=str(out_dir),
+        match_mode=cfg["evaluation"]["match_mode"],
+        auto_path=cfg["evaluation"]["auto_csv"],
+        auto_label_col=cfg["evaluation"]["auto_label_column"]
+    )
+    
 CLASSES = [0, 1, 2, 3, 4]
 
 CLASS_NAMES = {
