@@ -1,0 +1,77 @@
+# =========================
+# General paths
+# =========================
+input:
+  master_csv: patient_data_merged.csv
+  input_folder: P_H_anomly_labeled_Audiodata
+  patient_filter:
+    - "100425001"
+    - "100425002"
+    - "1_C"
+    - "2_C"
+
+output:
+  segments_dir: rms_mod_M1_AL
+  results_dir: segment_rms_mod_M1_AL
+
+# =========================
+# Audio parameters
+# =========================
+audio:
+  target_sr: 16000
+  n_fft: 2048
+  hop_length: 512
+  min_segment_duration: 0.01
+  fixed_segment_length: 1.0
+
+# =========================
+# Segmentation
+# =========================
+segmentation:
+  method: rms_mod        # energy | energy_mod | rms_mod | sed | atst | yamnet | vad
+  merge:
+    max_gap_sec: 0.0
+    min_duration_sec: 0.01
+
+# =========================
+# Filtering
+# =========================
+filtering:
+  mode: default          # none | heart | lung | default
+
+# =========================
+# Model configuration
+# =========================
+model:
+  mode: single           # single | m4
+  device: auto           # auto | cpu | cuda
+  ast:
+    model_dir: ast_model_output_H_all
+  m4:
+    m1_dir: null
+    m2_dir: null
+    m3_dir: null
+
+# =========================
+# SED / ATST
+# =========================
+sed:
+  model_id: fschmid56/PretrainedSED-frame_mn10
+  threshold: 0.5
+
+atst:
+  model_id: Audio-WestlakeU/ATST-SED
+  threshold: 0.5
+
+yamnet:
+  threshold: 0.4
+  frame_hop: 0.48
+
+# =========================
+# Evaluation
+# =========================
+evaluation:
+  enabled: true
+  match_mode: patient     # patient | pair | basename
+  auto_csv: null
+  auto_label_column: null
