@@ -12,8 +12,6 @@ from pipeline.config import Settings
 from pipeline.filtering import apply_pre_filter
 from pipeline.models import get_device
 
-
-# Lazily loaded models to avoid paying startup cost unless needed
 _sed_processor = None
 _sed_model = None
 
