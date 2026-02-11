@@ -1,93 +1,250 @@
-# BS_auto_annotation
+# Towards Objective Gastrointestinal Auscultation:Automated Segmentation and Annotation of Bowel Sound Patterns  
+(Event Detection + Automatic Pattern Labeling)
+
+This is the official code repository associated with the paper:
+
+📄 **Towards Objective Gastrointestinal Auscultation:Automated Segmentation and Annotation of Bowel Sound Patterns **
+✍️ *Zahra Mansour, Verena Uslar, Dirk Weyhe, Danilo Hollosi and Nils Strodthoff.*
+📅 **Currently under review**
+This repository provides an end-to-end AI-based bowel sound (BS) auto-annotation pipeline for abdominal auscultation recordings.  
+The system performs automatic bowel sound event detection and pattern classification to generate structured annotation outputs suitable for clinical research and AI-based clinical decision support development.
+---
+
+# Overview
+
+The pipeline performs:
+
+1. Automatic bowel sound event detection (segmentation)
+2. AI-based classification of detected segments
+3. Structured export of annotations (CSV / TXT)
+4. Optional evaluation against ground truth annotations
+
+It is designed for:
+
+- Large-scale bowel sound dataset annotation
+- Clinical gastrointestinal research
+- Development of AI-based clinical decision-making systems
+- Reproducible biomedical signal processing workflows
+
+---
+
+# Main Features
+
+## 1. Automatic Event Detection
+
+Supported segmentation methods (configurable in `config.yml`):
+
+- Energy-based detection
+- Modified energy detection
+- RMS-based detection (recommended baseline)
+- Sound Event Detection (SED) backend (optional)
+- ATST-SED backend (optional)
+- YAMNet backend (optional)
+- Voice Activity Detection (VAD)
+
+Post-processing options include:
+- Minimum duration filtering
+- Gap merging
+- Adaptive thresholding
+
+---
+
+## 2. Automatic Pattern Classification
+
+Each detected bowel sound segment is automatically assigned a predicted class label using a pretrained AI model (e.g., AST-based architecture or ensemble model).
+
+Example Bowel sound patterns:
+
+- SB  (Single Burst)
+- MB  (Multiple Burst)
+- CRS (Continuous Random Sound)
+- HS  (Harmonic Sound)
+- NONE / scilent
 
 
+---
 
-## Getting started
+# Installation
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+It is recommended to create a clean Python environment.
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+## Install dependencies
 
-## Add your files
+install typical dependencies:
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
+```bash
+pip install numpy pandas scipy librosa torch transformers safetensors pyyaml
+```
+
+If using GPU:
+
+```bash
+python -c "import torch; print(torch.cuda.is_available())"
+```
+
+---
+
+# Quick Start
+
+## Step 1 – Configure the pipeline
+
+Edit the configuration file:
 
 ```
-cd existing_repo
-git remote add origin https://gitlab.uni-oldenburg.de/fobo1276/bs_auto_annotation.git
-git branch -M main
-git push -uf origin main
+config.yml
 ```
 
-## Integrate with your tools
+Set:
 
-- [ ] [Set up project integrations](https://gitlab.uni-oldenburg.de/fobo1276/bs_auto_annotation/-/settings/integrations)
+- Input paths
+- Segmentation method
+- Model checkpoint path
+- Output directories
+- Audio parameters
 
-## Collaborate with your team
+---
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
+## Step 2 – Run the pipeline
 
-## Test and Deploy
+```bash
+python main.py
+```
 
-Use the built-in continuous integration in GitLab.
+The system will:
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+1. Load audio recordings
+2. Perform bowel sound segmentation
+3. Predict class labels for detected segments
+4. Export structured annotation files
 
-***
+---
 
-# Editing this README
+# Input Data Format
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+Two input options are supported.
 
-## Suggestions for a good README
+---
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+## Option A – Master CSV (Recommended)
 
-## Name
-Choose a self-explaining name for your project.
+Provide a CSV file with at least:
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+| Column Name | Description |
+|-------------|------------|
+| Patient     | Patient identifier |
+| Wav_path    | Path to .wav file |
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+Example:
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+```csv
+Patient,Wav_path
+100425001,/path/to/audio/file1.wav
+100425002,/path/to/audio/file2.wav
+```
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+---
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+## Option B – Folder-Based Input
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+Place all `.wav` files in:
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+```
+input_folder/
+```
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+Patient IDs may be extracted automatically from filenames.
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+---
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+# Configuration Parameters (config.yml)
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+## Input Section
 
-## License
-For open source projects, say how it is licensed.
+- input.master_csv
+- input.input_folder
+- input.patient_filter
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+---
+
+## Audio Section
+
+- audio.target_sr (e.g., 16000 Hz)
+- audio.n_fft
+- audio.hop_length
+- audio.min_segment_duration
+- audio.fixed_segment_length
+
+---
+
+## Segmentation Section
+
+- segmentation.method  
+  Options:  
+  `energy | energy_mod | rms_mod | sed | atst | yamnet | vad`
+
+- segmentation.merge.max_gap_sec
+- segmentation.merge.min_duration_sec
+
+---
+
+## Filtering Section (Optional)
+
+- filtering.mode  
+  Options:  
+  `none | heart | lung | default`
+
+---
+
+## Model Section
+
+- model.mode (single | ensemble)
+- model.device (cpu | cuda | auto)
+- model.checkpoint_path
+- model.ensemble_paths (if applicable)
+
+---
+
+## Evaluation Section (Optional)
+
+- evaluation.enabled (true/false)
+- evaluation.match_mode (patient | pair | basename)
+
+---
+
+# Output Files
+
+The pipeline generates:
+
+## 1. Annotation CSV
+
+Typical format:
+
+- Patient
+- Wav_path
+- Start_time_sec
+- End_time_sec
+- Predicted_Label
+
+---
+
+## 2. TXT Annotation File (Optional)
+
+Format:
+
+```
+start_time    end_time    label
+```
+
+---
+
+## 3. Evaluation Metrics (If Enabled)
+
+- Sensitivity
+- Specificity
+- Precision
+- F1-score
+- ROC metrics
+
+---
+
+
