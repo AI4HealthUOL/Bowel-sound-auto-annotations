@@ -5,13 +5,7 @@ from scipy.signal import butter, sosfiltfilt
 
 
 def design_band_filter(sr: int, f_lo: float = 30.0, f_hi: float = 4000.0, order: int = 4):
-    """
-    Design a Butterworth band filter in second-order-sections (SOS) form.
 
-    Notes:
-    - SOS is numerically stable.
-    - We apply it with zero-phase filtering (sosfiltfilt) to avoid phase distortion.
-    """
     nyq = 0.5 * sr
     freqs = []
     btype = None
@@ -37,15 +31,7 @@ def design_band_filter(sr: int, f_lo: float = 30.0, f_hi: float = 4000.0, order:
 
 
 def apply_pre_filter(y: np.ndarray, sr: int, mode: str = "default") -> np.ndarray:
-    """
-    Optional pre-filtering step to reduce irrelevant frequency content.
 
-    Modes:
-      - none    : no filtering
-      - default : 30–4000 Hz
-      - heart   : 20–400 Hz
-      - lung    : 100–2000 Hz
-    """
     if mode == "none":
         return y
 
