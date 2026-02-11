@@ -84,13 +84,7 @@ def fill_time_gaps(
     decimals=None,
     min_gap=0.0,
 ):
-    """
-    Insert explicit "gap" segments between predicted segments.
 
-    Why this is useful:
-    - Some plots/metrics assume the whole timeline is covered.
-    - Makes it obvious where the model predicted "nothing" (class 0, usually Silent).
-    """
     assert len(segments) == len(labels), "segments and labels length mismatch"
     if not segments:
         if include_edges and total_duration and total_duration > 0:
