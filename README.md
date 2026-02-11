@@ -1,14 +1,18 @@
-# Towards Objective Gastrointestinal Auscultation:Automated Segmentation and Annotation of Bowel Sound Patterns  
+# Towards Objective Gastrointestinal Auscultation: Automated Segmentation and Annotation of Bowel Sound Patterns  
 (Event Detection + Automatic Pattern Labeling)
 
 This is the official code repository associated with the paper:
 
-📄 **Towards Objective Gastrointestinal Auscultation:Automated Segmentation and Annotation of Bowel Sound Patterns **
+📄 **Towards Objective Gastrointestinal Auscultation: Automated Segmentation and Annotation of Bowel Sound Patterns **
+
 ✍️ *Zahra Mansour, Verena Uslar, Dirk Weyhe, Danilo Hollosi and Nils Strodthoff.*
+
 📅 **Currently under review**
+
+---
 This repository provides an end-to-end AI-based bowel sound (BS) auto-annotation pipeline for abdominal auscultation recordings.  
 The system performs automatic bowel sound event detection and pattern classification to generate structured annotation outputs suitable for clinical research and AI-based clinical decision support development.
----
+
 
 # Overview
 
