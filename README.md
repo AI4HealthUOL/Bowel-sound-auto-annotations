@@ -159,6 +159,12 @@ input_folder/
 Patient IDs may be extracted automatically from filenames.
 
 ---
+## Data Availability
+
+The dataset used in this study, consisting of recordings from **four subjects**, is publicly available at the following link:
+
+[Dataset on Figshare](https://doi.org/10.6084/m9.figshare.28595741.v1)
+
 
 # Configuration Parameters (config.yml)
 
